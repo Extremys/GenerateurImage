@@ -7,4 +7,10 @@ public class Nebuleuse extends Astre{
 		
 	}
 
+	@Override
+	public void addAstre(Vue vue, int nbOcc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -35,4 +35,6 @@ public abstract class Astre extends Vue{
 	
 	public abstract void randomLambda(int lambdaMin, int lambdaMax);
 	
+	public abstract void addAstre(Vue vue, int nbOcc);
+	
 }

@@ -157,7 +157,7 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 		}	
 	}
 	
-	public void afficheOccupationMatrice(){
+	public void afficheOccupationMatrice(){ //où lambda différent de 0
 		
 		for(int i=0; i<this.matrice.length;i++){
 
@@ -173,6 +173,15 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 		}	
 	}
 	
+	
+	public void addAstreMulti(int nbreEtoile, int nbreGalaxie /*int nbreNebuleuse*/){
+		Etoile star = new Etoile();
+		Galaxie galaxie = new Galaxie();
+		star.addAstre(this, nbreEtoile);
+		galaxie.addAstre(this, nbreGalaxie);
+		
+	}
+	
 	public void convolutionMatrice(/*noyau en param?*/){ //ajoute les effets atm+recepteur
 		
 		
@@ -181,12 +190,81 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 
 
 	public void calibrerVue(){ //correspondance lambda nivGris (R,G,B)
+		//copie & conversion des lambda en RGB lambdaEff->255
+		
 		
 	}
+	public void afficherVue(BufferedImage image, String nomFichier){
+		
+		File copieVue = new File(nomFichier+"-temp.jpg");
+		try {
+			ImageIO.write(image, "jpg", copieVue);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//pour parer la corruption du fichier une fois capturé on enregistre une copie temporaire
+		
+		JFrame f = new JFrame("Vue générée");
+        f.setSize(this.hauteur,this.largeur);
+	   	ImageIcon capture = new ImageIcon(nomFichier+"-temp.jpg");
+	   	JLabel label = new JLabel(capture);
+	   	f.add(label);
+	   	f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+	   	f.setLocationRelativeTo(null);
+	   	f.setVisible(true);
+	   //	copieVue.delete(); //on efface la copie créée vérifier si c'est un dossier...
+	}
+	
+	public BufferedImage dessinerImage(){ 
+		
+		int h = this.hauteur;
+		int l = this.largeur;
+		int PIX_SIZE = 1; //Défini la granularité d'écriture
+		int xi;
+		int yi;
+		
+		
+		BufferedImage tempPic = new BufferedImage( h*PIX_SIZE, l*PIX_SIZE, 
 
-	public void afficherVue(){ //afficher fenêtre
+                BufferedImage.TYPE_3BYTE_BGR );
 		
+		Graphics2D surface =(Graphics2D)tempPic.getGraphics();
+		
+		for(int i=0; i<this.matrice.length;i++){
+
+			for(int j=0; j<this.matrice.length;j++){
+				
+                xi = i * PIX_SIZE;
+
+                yi = j * PIX_SIZE;
+				
+				if(this.matrice[i][j]>0.0){
+					
+					int nivGris= 255; 
+				
+	                surface.setColor( new Color(nivGris, nivGris, nivGris) );
+
+	                System.out.println(nivGris);
+					
+				//System.out.println("x="+i+"; y="+j+", lambda="+this.matrice[i][j]+".");
+				
+				}
+				else{
+					
+					int nivGris= 0;
+					surface.setColor( new Color(nivGris, nivGris, nivGris) );
+					System.out.println(nivGris);
+				}
+				
+				surface.fillRect( yi, xi , PIX_SIZE , PIX_SIZE );
+			}
+			//surface.dispose(); //libere la memoire du graph
+		}
+		return tempPic;
 	}
+	
 
 	public void enregistrerVue(){ //format JPG FITS
 		

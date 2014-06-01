@@ -25,20 +25,23 @@ public class PicGenerator { //classe main déplaçable dans Vue????
 		
 		double[][] matrice = new double[600][600];
 		
-		Vue vue = new Vue(600,600,matrice,liste,filter);
+		Vue vue = new Vue(1024,1024,matrice,liste,filter);
 		
 		Etoile star1 = new Etoile();
 		Galaxie galax= new Galaxie();
 		
 		vue.initialiserMatrice();
 		
-		//star1.addEtoile(vue, 100);
-		//galax.addGalaxie(vue, 100);
+		//star1.addAstre(vue, 100); //problème fin process
+		//galax.addAstre(vue, 100); //problème fin process
+		vue.addAstreMulti(100, 30);
 		
+		BufferedImage temp = vue.dessinerImage();
+		vue.afficherVue(temp,"vueTest");
 		
 		//filter.appliqueFiltre(vue);
 		
-		vue.afficheOccupationMatrice();
+		//vue.afficheOccupationMatrice();
 		
 		//vue.afficheMatrice();
 		
