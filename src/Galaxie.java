@@ -51,8 +51,8 @@ public class Galaxie extends Astre{
 		
 		Random aleatoire = new Random();
 		
-		this.a= 10;//grd axe
-		this.b=5; //demi grd axe
+		this.a= 12;//grd axe
+		this.b=6; //demi grd axe
 		
 		for(int k=0; k<nbOcc; k++){
 			

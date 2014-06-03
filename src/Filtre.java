@@ -102,7 +102,7 @@ public class Filtre { // plutôt filtre visuel de floutage...etc...
 				
 				//Problème normalisation de la gaussienne
 				
-				double T=(1/Math.sqrt(2*Math.PI*sigma))*Math.exp(-Math.pow(lambda-lambdaEf,2)/(2*Math.pow(sigma, 2)));
+				double T=(1/Math.sqrt(2*Math.PI)*sigma)*Math.exp(-Math.pow(lambda-lambdaEf,2)/(2*Math.pow(sigma, 2)));
 				
                 vue.addDoubleMatrice(i, j, vue.getMatrice()[i][j]*T);
 				

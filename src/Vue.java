@@ -105,9 +105,6 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 	}
 
 
-
-
-
 	public double[][] getMatrice() {
 		return matrice;
 	}
@@ -182,7 +179,91 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 		
 	}
 	
-	public void convolutionMatrice(/*noyau en param?*/){ //ajoute les effets atm+recepteur
+	public void convolutionMatrice(double[][] noyau/*noyau en param 3x3*/){ //ajoute les effets atm+recepteur
+		
+		
+		int tailleMatrice= (noyau.length%2)+this.matrice.length;
+		int tailleBordure= noyau.length%2;
+		
+		double[][] matriceTemp= new double[tailleMatrice][tailleMatrice];
+		
+		for(int i=0; i<tailleMatrice; i++){ //initialise la matrice copie avec des zéros
+			
+			for(int j=0; j<tailleMatrice; j++){
+			
+			
+				matriceTemp[i][j]= 0.0;//lambda initial nul
+				
+				//coordonnées x=i et y=j
+			
+				//System.out.println(this.matrice[i][j]);
+			}
+		}
+		
+		for(int i=0; i<this.largeur; i++){ //copie la matrice où on applique la convolution (parcours de this.matrice)
+			
+			for(int j=0; j<this.hauteur; j++){
+			
+			
+				matriceTemp[i+tailleBordure][j+tailleBordure]= this.matrice[i][j]; //-1 ??
+				
+				
+		
+			}
+		}
+		
+		for(int i=tailleBordure; i<tailleMatrice-tailleBordure; i++){ //on applique la convolution à matriceTemp
+			
+			for(int j=tailleBordure; j<tailleMatrice-tailleBordure; j++){
+			
+				double som=0.0; //à chaque fois qu'on change de Px on réinitialise la somme
+				
+				double K11=noyau[0][0];
+				double K12=noyau[0][1];
+				double K13=noyau[1][2];
+				
+				double K21=noyau[1][0];
+				double K22=noyau[1][1];
+				double K23=noyau[1][2];
+				
+				double K31=noyau[2][0];
+				double K32=noyau[2][1];
+				double K33=noyau[2][2];
+				
+				som= K11*matriceTemp[i-1][j-1]+K12*matriceTemp[i][j-1]+K13*matriceTemp[i+1][j-1]+K21*matriceTemp[i-1][j]+K22*matriceTemp[i][j]+K23*matriceTemp[i+1][j]+K31*matriceTemp[i-1][j+1]+K32*matriceTemp[i][j+1]+K33*matriceTemp[i+1][j+1];
+			    
+				//Traitement du Px central courant
+				//parcours du noyau:
+				
+				/*
+				for(int k=0; k<noyau.length; k++){
+					
+					for(int l=0; l<noyau.length; l++){
+						
+						som=som+noyau[k][l]*;
+					}
+					
+				} */
+				matriceTemp[i][j]= som;
+
+			}
+		}
+		
+		//On copie la matrice (matriceTemp) convoluée dans la matrice de la vue (matrice)...
+		
+		for(int i=0; i<this.largeur; i++){ //on parcourt this.matrice et on copie l'élément de matriceTemp
+			
+			for(int j=0; j<this.hauteur; j++){
+			
+			
+				this.matrice[i][j]= matriceTemp[i+tailleBordure][j+tailleBordure]; //-1 ??
+				
+				
+		
+			}
+		}
+		
+		
 		
 		
 	}
@@ -217,7 +298,7 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 	   //	copieVue.delete(); //on efface la copie créée vérifier si c'est un dossier...
 	}
 	
-	public BufferedImage dessinerImage(){ 
+	public BufferedImage dessinerImage(){ //Dessine une image RGB
 		
 		int h = this.hauteur;
 		int l = this.largeur;
@@ -240,7 +321,7 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 
                 yi = j * PIX_SIZE;
 				
-				if(this.matrice[i][j]>0.0){
+				if(this.matrice[i][j]>0.009){ //sensibilité d'affichage
 					
 					int nivGris= 255; 
 				
@@ -266,7 +347,17 @@ public class Vue { //ici qu'on va assembler l'image par écritures successives  d
 	}
 	
 
-	public void enregistrerVue(){ //format JPG FITS
+	public void saveVueJPG(String nomFichier){ //format JPG FITS
+		
+		BufferedImage image = this.dessinerImage();
+		
+		File nouvelleImage = new File(nomFichier+".jpg");
+		try {
+			ImageIO.write(image, "jpg", nouvelleImage);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

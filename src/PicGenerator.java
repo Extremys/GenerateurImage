@@ -20,26 +20,33 @@ public class PicGenerator { //classe main déplaçable dans Vue????
 		Filtre filter = new Filtre("U", 5448, 840);
 		Astre star = new Etoile();
 		double[][][] tab = new double[600][600][1];
-		Pixel px = new Pixel();
 		ArrayList<Astre> liste = new ArrayList();
 		
-		double[][] matrice = new double[600][600];
+		double[][] matrice = new double[1024][1024];
 		
-		Vue vue = new Vue(1024,1024,matrice,liste,filter);
+		Vue vue = new Vue(600,600,matrice,liste,filter);
 		
 		Etoile star1 = new Etoile();
 		Galaxie galax= new Galaxie();
+		
+		//double[][] noyau;
+		//noyau = new double[3][3];
+		double[][] noyau = {{0.2,0.2,0.2},{0.2,1,0.2},{0.2,0.2,0.2}};
 		
 		vue.initialiserMatrice();
 		
 		//star1.addAstre(vue, 100); //problème fin process
 		//galax.addAstre(vue, 100); //problème fin process
-		vue.addAstreMulti(100, 30);
+		vue.addAstreMulti(500, 30);
+		
+		//filter.appliqueFiltre(vue);
+		
+		//vue.convolutionMatrice(noyau);
 		
 		BufferedImage temp = vue.dessinerImage();
 		vue.afficherVue(temp,"vueTest");
 		
-		//filter.appliqueFiltre(vue);
+		
 		
 		//vue.afficheOccupationMatrice();
 		
@@ -49,6 +56,9 @@ public class PicGenerator { //classe main déplaçable dans Vue????
 		//System.out.println(vue);
 		//vue.getMatrice().toString();
 
+
+
+		vue.saveVueJPG("Exemple");
 	    
 		   	
 	}
